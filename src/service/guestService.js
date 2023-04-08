@@ -3,6 +3,7 @@ const connection = require('../entity/connection');
 class GuestService {
     connect;
 
+
     constructor() {
         connection.connectToMySQL();
         this.connect = connection.getConnection();

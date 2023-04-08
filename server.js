@@ -6,8 +6,9 @@ const fsPromises = fs.promises;
 const router = require('./src/controller/router');
 const PORT = process.env.PORT || 3700;
 let serveFile = require('./serveFile');
+const errorController = require('./src/controller/handle/errorController')
 
-//! tạo 1 service
+//! tạo 1 server
 const server = http.createServer((req, res) => {
 
     let url = req.url;
@@ -25,10 +26,10 @@ const server = http.createServer((req, res) => {
             contentType = 'application/json';
             break;
         case '.jpg':
-            contentType = 'image/jpeg';
+            contentType = 'images/jpeg';
             break;
         case '.png':
-            contentType = 'image/png';
+            contentType = 'images/png';
             break;
         case '.txt':
             contentType = 'text/plain';
@@ -44,17 +45,18 @@ const server = http.createServer((req, res) => {
         filePath =path.join(__dirname, 'src', 'views', req.url, 'blog.html')
     } else if(contentType === 'text/html') {
         filePath =path.join(__dirname, 'src', 'views', req.url)
-        // console.log(filePath)
-    } else if (contentType !== 'text/html'){ // dinh nghia neu duoi duong dan khong phai html
+    } else { // dinh nghia neu duoi duong dan khong phai html
         let urlFake  = req.url.slice(req.url.indexOf('assets'),req.url.length)
+        console.log(urlFake);
         filePath = path.join(__dirname, 'src', 'views',urlFake);
     }
-
     if (!extension && req.url.slice(-1) !== '/') filePath += '.html';
     //! Làm function đọc các file HTML và để xử lý với router
 
-    if (contentType === 'text/html' && contentType !== 'application/octet-stream') {
+    if (contentType === 'text/html') {
+        // console.log(url);
         let arrPath = url.split('/');
+        console.log(arrPath);
         let stress = '';
         let chosenHandle =router[stress] || undefined;
         let id = -1; //! xu ly truong hop nhap id vao url
@@ -71,11 +73,16 @@ const server = http.createServer((req, res) => {
         if (router[stress] !== undefined) {
             chosenHandle = router[stress];
         }
-        console.log(arrPath)
-        console.log(id)
+        // else{
+        //     chosenHandle = errorController.showNotFound
+        // }
         chosenHandle(req, res, id);
-    } else {//! XỬ LÝ CSS VÀ ẢNH CÁC THỨ
-        // ! makes .html extension not required in the browser( nếu không có extname và last char # '/' => làm .html kp yêu cầu trong browser)
+    } else {
+        //! XỬ LÝ CSS VÀ ẢNH CÁC THỨ
+
+
+        //! makes .html extension not required in the browser( nếu không có extname và last char # '/' => làm .html kp yêu cầu trong browser)
+
         //! có được filePath và contentType
         //! kiểm tra xem đường dẫn đã cho có tồn tại hay không
 
@@ -101,5 +108,5 @@ const server = http.createServer((req, res) => {
     }
 });
 
-//! service listening on port
+//! server listening on port
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

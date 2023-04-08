@@ -17,7 +17,7 @@ postHtml += `
                 </div>
                 <form method="POST" onsubmit="return confirm ('Bạn có chắc chắn muốn xóa không?')">
                 <input name="idDelete" type="hidden" value='!{item.id_post}'>
-                <button type="submit" id="delete" class="btn btn-outline-warning" hidden="">Delete</button>
+                <button type="submit" id="delete" class="btn btn-outline-warning">Delete</button>
                 </form>
               </div>
           <!-- Blog item END -->
@@ -25,7 +25,7 @@ postHtml += `
             `
 if (true) {
     let k = postHtml.indexOf(`id="delete"`);
-    let postHtml_01 = postHtml.slice(0,k) + `type="hidden" `;
+    let postHtml_01 = postHtml.slice(0,k) + ` hidden='' `;
     let postHtml_02 = postHtml.slice(k);
     postHtml = postHtml_01 + postHtml_02;
 }

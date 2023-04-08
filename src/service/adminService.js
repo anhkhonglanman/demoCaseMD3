@@ -7,9 +7,33 @@ class AdminService {
         connection.connectToMySQL();
         this.connect = connection.getConnection();
     }
+
+    getFounder(){
+        return new Promise((resolve, reject) => {
+            this.connect.query(`select avatar, user_name from account where power = 1`, (err, admins) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(admins)
+                }
+            })
+        })
+    }
+    getAllAccount(){
+        return new Promise((resolve, reject) => {
+            this.connect.query(`select * from account where power = 0`, (err, admins) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(admins)
+                }
+            })
+        })
+    }
+
     getAllPost(){
         return new Promise((resolve, reject) => {
-            this.connect.query(`select content, img, title, id_post, id_topic, time from posts;`, (err, posts) => {
+            this.connect.query(`select content, img, title, id_post, topic_name, topic.id_topic, time from posts inner join topic where posts.id_topic = topic.id_topic;`, (err, posts) => {
                 if (err) {
                     reject(err)
                 } else {

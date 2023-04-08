@@ -40,11 +40,47 @@ class AdminController {
         return adminHtml
     }
 
+
+
+    getAccountHtml = (accounts, adminHtml) => {
+        let accountHtml = '';
+        accounts.map((item) => {
+            accountHtml += `
+             <div class="hstack gap-2">
+                                    <!-- Avatar -->
+                  <div class="avatar">
+                      <img class="avatar-img rounded-circle" src="${item.avatar}" alt="">
+                  </div>
+                                    <!-- Title -->
+                  <div class="overflow-hidden">
+                      <a class="h6 mb-0" href="#!">${item.user_name}</a>
+                  </div>
+                                    <!-- Button -->
+                  <a class="btn btn-primary rounded-circle icon-md ms-auto" href="#">
+                  <form method="POST">
+                   <input name="idAddFriend" type="hidden" value='${item.id_user}'>
+                   <button type="submit" class="btn btn-primary-soft rounded-circle icon-md ms-auto" href="#"><i class="fa-solid fa-plus"> </i></button>
+                   </form>
+                   </a>
+                   
+              </div>         
+            `
+        })
+        adminHtml = adminHtml.replace('{Account}', accountHtml)
+        return adminHtml
+    }
+
+
+
+
     blogAdmin = async (req, res) => {
         if (req.method === 'GET') {
             fs.readFile('./src/views/blog_admin.html', 'utf-8', async (err, adminHtml) => {
                 let posts = await adminService.getAllPost()
                 adminHtml = this.getBlogAdminHtml(posts, adminHtml)
+                let accounts = await adminService.getAllAccount()
+                adminHtml = this.getAccountHtml(accounts, adminHtml)
+                console.log()
                 res.write(adminHtml);
                 res.end();
             })
@@ -58,7 +94,7 @@ class AdminController {
                 if (deletePost.idDelete) {
                     let post_id = deletePost.idDelete
                     console.log(post_id, 1111111)
-
+                    await  adminService.deleteAPost(post_id);
                     res.writeHead(301, {location: '/blogAdmin'})
                     res.write('Success')
                     res.end();
@@ -81,3 +117,4 @@ class AdminController {
         }
     }
 }
+module.exports = new AdminController()
