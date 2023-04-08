@@ -2,13 +2,13 @@ const fs = require('fs')
 const qs = require('qs')
 const guestService = require('../../service/guestService')
 const topicService = require('../../service/topicService')
-const userService = require('../../service/userService')
+const adminService = require('../../service/adminService')
 const cookie = require('cookie')
 
 class GuestController {
-    static currentAcc;
+    static currentUserId;
 //! Hien trang
-    getHomeHtml = (posts, homeHtml) =>{
+    static getHomeHtml = (posts, homeHtml) =>{
         let postHtml = '';
         let words = '';
         posts.map((item)=>{
@@ -40,7 +40,7 @@ class GuestController {
         return homeHtml
     }
 
-    getLastPost = (posts, homeHtml) =>{
+   static getLastPost = (posts, homeHtml) =>{
         let oldPosts = '';
         posts.map((item)=>{
             oldPosts += `
@@ -54,7 +54,7 @@ class GuestController {
         return homeHtml
     }
 
-    getTopic = (topics, homeHtml) =>{
+   static getTopic = (topics, homeHtml) =>{
         let topicHtml = '';
         topics.map((item)=>{
             topicHtml += `
@@ -67,8 +67,30 @@ class GuestController {
         return homeHtml
     }
 
+    static getFounder = (admins, homeHtml) =>{
+        let adminHtml = '';
+        admins.map((item)=>{
+            adminHtml += `
+               <div class="hstack gap-2">
+                                    <!-- Avatar -->
+               <div class="avatar">
+                   <a href="#"> <img class="avatar-img rounded-circle" src="${item.avatar}" alt=""> </a>
+               </div>
+                                    <!-- Title -->
+               <div class="overflow-hidden">
+                   <a class="h6 mb-0" href="#!">${item.user_name}</a>
+                   <p class="mb-0 small text-truncate">Founder</p>
+               </div>
+                                    <!-- Button -->
+               </div>
+            `
+        })
+        homeHtml = homeHtml.replace('{admin}', adminHtml)
+        return homeHtml
+    }
 
-    home = async (req, res) => {
+
+   static home = async (req, res) => {
         if(req.method === 'GET'){
             fs.readFile('./src/views/blog.html', 'utf-8', async (err, homeHtml) => {
                 let posts = await guestService.getPublicPost()
@@ -77,6 +99,8 @@ class GuestController {
                 homeHtml = this.getLastPost(oldPosts,homeHtml)
                 let topics = await topicService.findAllTopic();
                 homeHtml = this.getTopic(topics,homeHtml)
+                let admins = await adminService.getFounder();
+                homeHtml = this.getFounder(admins,homeHtml)
                 res.write(homeHtml);
                 res.end();
             })
@@ -84,36 +108,40 @@ class GuestController {
     }
 
 
-    blogDetails =  (req, res) => {
+   static blogDetails =  (req, res) => {
         fs.readFile('./src/views/blog-details.html', 'utf-8', (err, loginHtml) => {
-            // loginHtml =  this.getHtmlProducts(loginHtml);
             res.write(loginHtml);
             res.end();
 
         })
     }
+<<<<<<< HEAD
     profileConnection = (req, res) => {
         fs.readFile('./src/views/my-profile.html', 'utf-8', (err, loginHtml) => {
+=======
+   static profileConnection = (req, res) => {
+        fs.readFile('./src/views/my-profile-connections.html', 'utf-8', (err, loginHtml) => {
+>>>>>>> f229521d13587858a728228fd9f4b49ef1f51954
             res.write(loginHtml);
             res.end();
 
         })
     }
-    myProfile = (req, res) => {
-        fs.readFile('./src/views/my-profile.html', 'utf-8', (err, loginHtml) => {
+   static myProfile = (req, res) => {
+        fs.readFile('./src/views/editPost.html', 'utf-8', (err, loginHtml) => {
             res.write(loginHtml);
             res.end();
 
         })
     }
-    offline = (req, res) => {
+   static offline = (req, res) => {
         fs.readFile('./src/views/offline.html', 'utf-8', (err, loginHtml) => {
             res.write(loginHtml);
             res.end();
 
         })
     }
-    signUp = (req, res) => {
+   static signUp = (req, res) => {
         if (req.method === 'GET') {
             fs.readFile('./src/views/sign-up-advance.html', 'utf-8', (err, signupHtml) => {
                 res.write(signupHtml);
@@ -126,9 +154,7 @@ class GuestController {
             })
             req.on('end', async () => {
                 let user = qs.parse(data);
-
                 let account = await userService.createUser(user);
-
                 res.setHeader('Set-Cookie', cookie.serialize('user', JSON.stringify(account[0]), {
                     httpOnly: true,
                     maxAge: 60 * 60 * 24 * 7
@@ -141,7 +167,7 @@ class GuestController {
     }
 
 
-    signIn = (req, res) => {
+   static signIn = (req, res) => {
         if (req.method === 'GET') {
             fs.readFile('./src/views/sign-in-advance.html', 'utf-8', (err, loginHtml) => {
                 res.write(loginHtml);
@@ -155,8 +181,8 @@ class GuestController {
             req.on('end', async () => {
                 let user = qs.parse(data);
                 let account = await guestService.getGuest(user);
-                GuestController.currentAcc = account
-
+                console.log(account)
+                GuestController.currentUserId = account[0].id_user
                 if (account.length === 0) {
                     res.writeHead(301, { 'location': '/' });
                     res.end()
@@ -182,7 +208,7 @@ class GuestController {
             })
         }
     }
-    blogUser = (req, res, id) => {
+    static blogUser = (req, res, id) => {
         fs.readFile('./src/views/blog_user.html', 'utf-8', (err, homeUserHtml) => {
 
             res.write(homeUserHtml);
@@ -192,4 +218,4 @@ class GuestController {
 
 }
 
-module.exports = new GuestController();
+module.exports = GuestController

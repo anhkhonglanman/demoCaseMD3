@@ -1,14 +1,14 @@
-let serveFile = require('./../../../serveFile');
+let serveFile = require('./../../../serveFile')
+const fs = require('fs')
 
 
 
 class ErrorController {
-    showNotFound = () => {
-        serveFile('./view/error-404.html','text/html',res)
-        // fs.readFile('./view/error/notFound.html', 'utf-8', (err, notFoundHtml) => {
-        //     res.write(notFoundHtml);
-        //     res.end();
-        // })
+    showNotFound = (req,res) => {
+        fs.readFile('.src/views/error-404.html', 'utf-8', (err, notFoundHtml) => {
+            res.write(notFoundHtml);
+            res.end();
+        })
     }
 }
 

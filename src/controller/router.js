@@ -2,7 +2,11 @@
 const guestController = require('./handle/guestController');
 const ErrorController = require('./handle/errorController');
 const userController = require('./handle/userController');
+<<<<<<< HEAD
 const adminController = require('./handle/adminController')
+=======
+const adminController = require('./handle/adminController');
+>>>>>>> f229521d13587858a728228fd9f4b49ef1f51954
 
 
 
@@ -17,7 +21,8 @@ const router = {
     "my-profile-connections" : guestController.profileConnection,
     "my-profile" : guestController.myProfile,
     "offline" : guestController.offline,
-    "" : guestController.home
+    "" : guestController.home,
+    'editPost':userController.editPost
 };
 
 module.exports = router;

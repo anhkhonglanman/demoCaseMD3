@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "pulllan2",
   "version": "1.0.0",
   "description": "",
@@ -14,6 +15,13 @@
     "cookie": "^0.5.0",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.22",
+=======
+  "name": "cloneCase",
+  "version": "1.0.0",
+  "dependencies": {
+    "cookie": "^0.5.0",
+    "mysql": "^2.18.1",
+>>>>>>> f229521d13587858a728228fd9f4b49ef1f51954
     "qs": "^6.11.1"
   }
 }

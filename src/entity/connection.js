@@ -4,7 +4,7 @@ class Connection {
     configToMySQL = {
         host: 'localhost',
         user: 'root',
-        password: 'avbkchdttd1',
+        password: 'trang',
         database: 'blog',
         charset: 'utf8_general_ci'
     }

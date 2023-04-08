@@ -7,6 +7,17 @@ class UserService {
         connection.connectToMySQL();
         this.connect = connection.getConnection();
     }
+    findAPost = (id) => {
+        return new Promise((resolve, reject) => {
+            this.connect.query(`select title, content, img, status, topic_name, id_topic from posts inner join topic on posts.id_topic = topic.id_topic where id_post = '${id}';`, (err, post) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(post)
+                }
+            })
+        })
+    }
 
     getUser = (user) => {
         return new Promise((resolve, reject) => {
@@ -32,10 +43,9 @@ class UserService {
     }
 
     // Hien thi bai viet pucbic va status friend cua friend
-    getUserPost(id){
+    getGeneralPost(id){
         return new Promise((resolve, reject) => {
-            this.connect.query(`select content, img, title, time, id_post, id_user from posts where id_user = '${id}' or status = 'public' or ((select check_friend from friend_manager where id_user_01 = id_user and id_user_02 = '${id}') = 1 and status = 'friend');
-            `, (err, posts) => {
+            this.connect.query(`select content, img, title, time, id_post, topic_name, status, id_user from posts inner join topic on posts.id_topic = topic.id_topic where id_user = ${id} or status = 'public' or ((select check_friend from friend_manager where id_user_01 = id_user and id_user_02 = ${id}) = 1 and status = 'friend');`, (err, posts) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -44,6 +54,19 @@ class UserService {
             })
         })
     }
+    getPrivatePost(id){
+        return new Promise((resolve, reject) => {
+            this.connect.query(`select content, img, title, time, id_post, topic_name, status, id_user from posts inner join topic on posts.id_topic = topic.id_topic where id_user = ${id} and status = 'private'`, (err, posts) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(posts)
+                }
+            })
+        })
+    }
+
+
     // Tim cac bai viet theo tu khoa
     findPostByKeyword(id_user, keyword){
         return new Promise((resolve, reject) => {
@@ -111,9 +134,9 @@ class UserService {
 
 
     //Xoa mot bai viet cua minh
-    deleteAPost(id_user, id_post){
+    deleteAPost( id_post){
         return new Promise((resolve, reject) => {
-            this.connect.query(`delete from posts where id_post=${id_post} and id_user = ${id_user}`, (err, posts) => {
+            this.connect.query(`delete from posts where id_post=${id_post} `, (err, posts) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -124,9 +147,9 @@ class UserService {
     }
 
     // Sua bai viet
-    updateAPost(post){
+    updateAPost(id,editPost){
         return new Promise((resolve, reject) => {
-            this.connect.query(`update posts set content = '${post.content}', img = '${post.img}', title = '${post.title}', id_topic= '${post.id_topic}', status= '${post.status}' where id_post = '${post.id_post}'`, (err, post) => {
+            this.connect.query(`update posts set content = '${editPost.content}', img = '${editPost.img}', title = '${editPost.title}', id_topic= '${editPost.id_topic}', status= '${editPost.status}' where id_post = '${editPost.id}'`, (err, post) => {
                 if (err) {
                     reject(err)
                 } else {
