@@ -18,7 +18,7 @@ class GuestController {
             <div class="row g-3">
               <div class="col-4">
                 <!-- Blog image -->
-                <img class="rounded" src="${item.img}" alt="">
+                <img class="rounded" src="${item.image}" alt="">
               </div>
               <div class="col-8">
                 <!-- Blog caption -->
@@ -93,7 +93,7 @@ class GuestController {
         })
     }
     profileConnection = (req, res) => {
-        fs.readFile('./src/views/my-profile-connections.html', 'utf-8', (err, loginHtml) => {
+        fs.readFile('./src/views/my-profile.html', 'utf-8', (err, loginHtml) => {
             res.write(loginHtml);
             res.end();
 

@@ -539,7 +539,7 @@ var e = {
                 e.selectAll(".dropzone-default").forEach((e => {
                     const a = e.dataset.dropzone ? JSON.parse(e.dataset.dropzone) : {},
                         b = {
-                            url: '/upload', // Change this URL to your actual image upload code
+                            url: '/upload', // Change this URL to your actual images upload code
                             // Fake the file upload, since GitHub does not handle file uploads
                             // and returns a 404
                             // https://docs.dropzone.dev/getting-started/setup/server-side-implementation
@@ -570,7 +570,7 @@ var e = {
                             addRemoveLinks: true,
                             previewsContainer: d.querySelector(".dz-preview"),
                             previewTemplate: d.querySelector(".dz-preview").innerHTML,
-                            url: '/upload', // Change this URL to your actual image upload code
+                            url: '/upload', // Change this URL to your actual images upload code
                             // Now fake the file upload, since GitHub does not handle file uploads
                             // and returns a 404
                             // https://docs.dropzone.dev/getting-started/setup/server-side-implementation
